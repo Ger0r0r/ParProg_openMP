@@ -33,7 +33,7 @@ int main (int argc, char ** argv) {
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
 	if (argc != 1) {
-		printf("time: %lg\n", time_spent);
+		printf("time: %0.6lg\n", time_spent);
 	} else {
 		for (i = 0; i < n; i++){
 			for (j = 0; j < n; j++){
