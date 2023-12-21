@@ -22,9 +22,9 @@ med_time_m = np.zeros(8)
 med_time_f = np.zeros(8)
 data = 0
 
-bar_s = IncrementalBar('Done', max = 100)
+bar_s = IncrementalBar('Done', max = 10)
 
-for i in range(100):
+for i in range(10):
 	p = Popen(["./run_single_mpi", sys.argv[1], sys.argv[2]], stdout=PIPE, stdin=PIPE, stderr=PIPE)
 	stdout_data = p.communicate(input=data)[0]
 
@@ -46,11 +46,11 @@ print("")
 print("Single "+str(med_time_s))
 print("")
 
-bar_m = IncrementalBar('Done', max = 800)
+bar_m = IncrementalBar('Done', max = 80)
 for j in range(8):
 	sum_time = 0
 	med_time = 0
-	for i in range(100):
+	for i in range(10):
 		p = Popen(["mpirun", "-n="+str(j+1), "./run_mpi", sys.argv[1], sys.argv[2]], stdout=PIPE, stdin=PIPE, stderr=PIPE)
 		stdout_data = p.communicate(input=data)[0]
 
@@ -92,3 +92,30 @@ bar_m.finish()
 
 print("Single "+str(med_time_s))
 print("MPI "+str(med_time_m))
+
+# xx = np.linspace(1,8,8)
+# yy = med_time_m / med_time_s
+# print(xx)
+
+# fig = plt.figure(figsize = [13.5, 5], dpi = 100)
+# fig = plt.plot(xx, yy, '-r', ms = 1)
+# fig = plt.xlabel('n')
+# fig = plt.ylabel('S(n)')
+# fig = plt.title('Ускорение S(n)')
+# fig = plt.tight_layout()
+
+# plt.show()
+
+# e = s / n
+
+# fig = plt.figure(figsize = [13.5, 5], dpi = 100)
+# fig = plt.plot(n, e, '-r', ms = 1)
+
+# # Настройка осей и меток
+# fig = plt.xlabel('n')
+# fig = plt.ylabel('E(n)')
+# fig = plt.title('Эффективность E(n)')
+# fig = plt.tight_layout()
+
+# # Отображение графика
+# plt.show()
