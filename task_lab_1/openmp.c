@@ -21,26 +21,30 @@ int main(int argc, char **argv) {
 		a[i] = calloc(JSIZE, sizeof(double));
 	}
 
+	double ** g = calloc(ISIZE+1, sizeof(double *));
+	for (int i = 0; i < ISIZE; i++){
+		g[i] = calloc(JSIZE, sizeof(double));
+	}
+
 	int i, j, k;
 	int r, c;
 
 	for (i = 0; i < ISIZE; i++){
 		for (j = 0; j < JSIZE; j++){
 			a[i][j] = 10 * i + j;
+			g[i][j] = 10 * i + j;
 		}
 	}
 	//начало измерения времени
  	double start_time = omp_get_wtime();
 
 	omp_set_num_threads(NPROC);
-	#pragma omp parallel for schedule(static,1) private(j,i,k,r,c)
-	for (k = 0; k < 8; k++) {
-		r = (int)(k / 4);
-		c = (k % 4);
-		// printf("(%d/%d) I start at %d\n", omp_get_thread_num(), omp_get_max_threads(), k);
-		for (i = r; i < ISIZE - 4; i+=2) {
-			for (j = c; j < JSIZE - 4; j+=4) {
-				a[i][j] = sin(0.1 * a[i + 2][j + 4]);
+	#pragma omp parallel 
+	{
+    	#pragma omp for schedule(dynamic,4) collapse(2) 
+		for (i = 0; i < ISIZE - 4; i++){
+			for (j = 0; j < JSIZE - 4; j++){
+				g[i][j] = sin(0.1 * a[i + 2][j + 4]);
 			}
 		}
 	}
@@ -65,5 +69,10 @@ int main(int argc, char **argv) {
 		free(a[i]);
 	}
 	free(a);
+
+	for (int i = 0; i < ISIZE; i++){
+		free(g[i]);
+	}
+	free(g);
 	return 0;
 }
